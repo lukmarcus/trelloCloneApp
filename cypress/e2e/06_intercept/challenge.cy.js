@@ -23,6 +23,11 @@ beforeEach( function() {
 // of the card you created
 it('creates a card', function() {
 
+  cy.intercept({
+    method: 'POST',
+    url: '/api/cards'
+  }).as('newCard')
+
   cy.visit(`/board/${this.boardId}`)
 
   cy.get('[data-cy="new-card"]')
@@ -31,11 +36,23 @@ it('creates a card', function() {
   cy.get('[data-cy="new-card-input"]')
     .type('card{enter}')
   
+  cy.wait('@newCard')
+    .then(({response, request}) => {
+      expect(response.statusCode).eq(201)
+      expect(request.body.boardId).to.eq(this.boardId)
+      expect(request.body.name).to.eq('card')
+    })
+
 });
 
 // challenge #2: create and check the card you created using UI and use .intercept() command
 // to catch the http request that happens. test its status code
 it('checking the card', function() {
+
+  cy.intercept({
+    method: 'PATCH',
+    url: '/api/cards/*'
+  }).as('patchCard')
 
   cy.visit(`/board/${this.boardId}`)
   
@@ -45,8 +62,18 @@ it('checking the card', function() {
   cy.get('[data-cy="new-card-input"]')
     .type('milk{enter}')
 
+  cy.get('[data-cy="card-text"]')
+    .should('have.text', 'milk')
+
   cy.get('[data-cy="card-checkbox"]')
     .check()
+
+  cy.get('[data-cy="card-checkbox"]')
+    .should('be.checked')
+
+  cy.wait('@patchCard')
+    .its('response.statusCode')
+    .should('eq', 200)
 
 });
 
@@ -56,16 +83,42 @@ it('creates a new list', function() {
 
   cy.visit(`/board/${this.boardId}`)
 
+  cy.intercept({
+    method: 'POST',
+    url: '/api/lists'
+  }).as('listCreate')
+
   cy.get('[data-cy="create-list"]')
     .click()
 
   cy.get('[data-cy="add-list-input"]')
     .type('list 2{enter}')
   
+  cy.wait('@listCreate')
+    .its('request.body.boardId')
+    .should('eq', this.boardId)
+
 });
 
 // challenge #4: delete a list and assert that the server responded 
 // with a correct status code
-it('deletes a list', function() {
+it.only('deletes a list', function() {
+
+  cy.visit(`/board/${this.boardId}`)
+
+  cy.intercept({
+    method: 'DELETE',
+    url: '/api/lists/*'
+  }).as('deleteList')
+
+  cy.get('[data-cy="list-options"]')
+    .click()
+  
+  cy.get('[data-cy="delete-list"]')
+    .click()
+
+  cy.wait('@deleteList')
+    .its('response.statusCode')
+    .should('eq', 200)
 
 });

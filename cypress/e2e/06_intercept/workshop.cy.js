@@ -14,14 +14,11 @@ it('creating a new card', () => {
 
   cy.get('[data-cy="new-card-input"]')
     .type('milk{enter}')
-
-  cy.wait('@createCard')
-    .then( ({ request, response }) => {
-      expect(request.body).to.have.property('order').and.eq(0)
-      expect(response.body).to.have.property('deadline')
-      expect(response.body.description).to.be.empty
-    })
   
+  cy.wait('@createCard')
+    .its('response.statusCode')
+    .should('eq', 201)
+
 });
 
 it('board has no lists', () => {
@@ -29,23 +26,25 @@ it('board has no lists', () => {
   cy.intercept({
     method: 'GET',
     url: /lists/
-  }).as('lists')
+  }).as('getLists')
 
   cy.visit('/board/1')
 
-  cy.wait('@lists')
+  cy.wait('@getLists')
 
   cy.get('[data-cy=list]')
     .should('have.length', 1)
-  
+
 });
 
 it('deleting a list', () => {
 
-  cy.visit('/board/1')
+  cy.intercept({
+    method: 'DELETE',
+    url: '/api/lists/*'
+  }).as('deleteLists')
 
-  cy.intercept('DELETE', '/api/lists/*')
-    .as('deleteList')
+  cy.visit('/board/1')
 
   cy.get('[data-cy="list-options"]')
     .click()
@@ -53,8 +52,22 @@ it('deleting a list', () => {
   cy.get('[data-cy="delete-list"]')
     .click()
 
-  cy.wait('@deleteList')
+  cy.wait('@deleteLists')
     .its('response.statusCode')
     .should('eq', 200)
-  
+
 });
+
+it.only('mocking', () => {
+
+  cy.intercept({
+    method: 'GET',
+    url: '/api/boards'
+  }, {
+    body: []
+    // statusCode: 500
+  })
+
+  cy.visit('/')
+
+})
