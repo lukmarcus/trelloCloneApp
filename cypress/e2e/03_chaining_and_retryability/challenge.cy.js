@@ -14,7 +14,9 @@ it('asserting card titles', () => {
   cy.contains('[data-cy=card]', 'Feb 14 2022')
     .should('contain.text', 'Bread')
 
-  cy.contains('[data-cy=card]', 'Feb 14 2022')
+  cy.get('[data-cy="list"]')
+    .eq(1)
+    .contains('[data-cy=card]', 'Feb 14 2022')
     .should('contain.text', 'Shampoo')
 
 })
@@ -30,7 +32,6 @@ it('has a card with the text "bread"', () => {
   cy.visit('/board/1')
 
   cy.get('[data-cy=card-text]')
-    .eq(1)
     .should('contain.text', 'Bread')
 
 })
@@ -44,7 +45,7 @@ it('has five cards', () => {
 
   cy.visit('/board/1')
 
-  cy.get('[data-cy=card-text]')
+  cy.get('[data-cy=card-text]', {timeout:10000})
     .should('have.length', 5)
   
 });
@@ -52,18 +53,14 @@ it('has five cards', () => {
 // challenge #4: the chain in this command is way too long. more importantly, it causes the test 
 // to be unstable. use chrome console to diagnose what each command yields 
 // and delete commands that are not needed for this test
-it('has a card with the text "bread" with the date of Feb 14 2022', () => {
+it.only('has a card with the text "bread" with the date of Feb 14 2022', () => {
 
   // 😈 evil code
   cardsLoadRandomly(3000)
 
   cy.visit('/board/1')
 
-  cy.get('[data-cy=list]')
-    .find('[data-cy=card-list]')
-    .contains('[data-cy=card]', 'Feb 14 2022')
-    .find('[data-cy=card-text]')
-    .eq(0)
+  cy.contains('[data-cy=card]', 'Feb 14 2022')
     .should('contain.text', 'Bread')
   
 });
