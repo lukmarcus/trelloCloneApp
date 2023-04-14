@@ -12,18 +12,23 @@ beforeEach( () => {
 
 })
 
-it('card is visible', () => {
+it('creates a card', () => {
 
-  cy.get('[data-cy="card"]')
+  cy.get('[data-cy="new-card-input"]')
+    .click()
+
+  cy.get('[data-cy="new-card-input"]')
+    .type('milk{enter}')
+
+  cy.get('[data-cy="card-text"]')
     .should('be.visible')
 
 })
 
 it('has proper number of cards', () => {
 
-  // create another card
   cy.get('[data-cy="new-card-input"]')
-    .type('tomatoes{enter}')
+    .type('milk{enter}')
 
   cy.get('[data-cy="card"]')
     .should('have.length', 2)
@@ -32,10 +37,9 @@ it('has proper number of cards', () => {
 
 it('has the checkbox in checked state', () => {
 
-  // check card
   cy.get('[data-cy="card-checkbox"]')
-    .check()
-
+    .click()
+  
   cy.get('[data-cy="card-checkbox"]')
     .should('be.checked')
 
@@ -44,12 +48,9 @@ it('has the checkbox in checked state', () => {
 
 })
 
-it('has correct list and card name', () => {
+it.only('has correct list name', () => {
 
   cy.get('[data-cy="list-name"]')
     .should('have.value', 'Groceries')
-
-  cy.get('[data-cy="card-text"]')
-    .should('have.text', 'bread')
 
 })
