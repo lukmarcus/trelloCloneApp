@@ -7,22 +7,17 @@ beforeEach( () => {
 // challenge #1: refactor this test so that it uses a single .then() command
 it('cards contain proper text', () => {
 
-    cy.get('[data-cy=list]')
-      .eq(0)
-      .find('[data-cy=card-text]')
-      .as('cards')
-  
-    cy.get('@cards')
-      .eq(0)
-      .should('have.text', 'Milk')
-  
-    cy.get('@cards')
-      .eq(1)
-      .should('have.text', 'Bread')
-    
-    cy.get('@cards')
-      .eq(2)
-      .should('have.text', 'Juice')
+  cy.get('[data-cy=list]')
+    .eq(0)
+    .find('[data-cy=card-text]')
+    .as('cards')
+
+  cy.get('@cards')
+    .then((cardText) => {
+      expect(cardText[0]).to.have.text('Milk')
+      expect(cardText[1]).to.have.text('Bread')
+      expect(cardText[2]).to.have.text('Juice')
+      })
   
   })
 
@@ -35,21 +30,32 @@ it('cards are checked', () => {
     .as('card-checkboxes')
 
   cy.get('@card-checkboxes')
-    .eq(0)
-    .should('be.checked')
-
-  cy.get('@card-checkboxes')
-    .eq(2)
-    .should('be.checked')
+    .then((checkedCard) => {
+      expect(checkedCard[0]).to.be.checked
+      expect(checkedCard[1]).not.to.be.checked
+      expect(checkedCard[2]).to.be.checked
+    })
 
 });
 
 // challenge #3: check number of lists an their names using .then() command
 it('number of lists and list names', () => {
 
+  cy.get('[data-cy="list-name"]')
+    .then((listName) => {
+      expect(listName[0]).to.have.value('Groceries')
+      expect(listName[1]).to.have.value('Drugstore')
+    })
+
 })
 
 // challenge #4: check visibility of lists using .then() command
-it('list visibility', () => {
+it.only('list visibility', () => {
   
+  cy.get('[data-cy="list"]')
+    .then((list) => {
+      expect(list[0]).to.be.visible
+      expect(list[1]).to.be.visible
+    })
+
 })
