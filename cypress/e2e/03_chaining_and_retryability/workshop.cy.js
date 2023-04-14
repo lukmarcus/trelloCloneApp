@@ -30,4 +30,3 @@ it('loads cards in our list randomly', () => {
     .should('contain.text', 'Bread')
   
 });
-

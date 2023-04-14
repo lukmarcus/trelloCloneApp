@@ -31,4 +31,3 @@ You can pass a function to both of the commands, but `.should()` will retry that
 * [list of different assertions bundled within Cypress](https://docs.cypress.io/guides/references/assertions.html#BDD-Assertions)
 * [docs for .then() command](https://docs.cypress.io/api/commands/then.html)
 * [my blog on the topic of testing lists](https://filiphric.com/testing-lists-of-items)
-
