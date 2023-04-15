@@ -1,5 +1,24 @@
 /// <reference types="cypress" />
 
+before( () => {
+
+  cy.request({
+      method: 'POST',
+      url: '/api/reset'
+  })
+
+  cy.visit('/')
+
+  cy.get('[data-cy="first-board"]')
+    .click()
+    .type('Things to buy{enter}')
+
+  cy.get('[data-cy="add-list-input"]')
+    .click()
+    .type('Groceries{enter}')
+
+})
+
 it('creating a new card', () => {
 
   cy.intercept({
@@ -13,7 +32,7 @@ it('creating a new card', () => {
     .click()
 
   cy.get('[data-cy="new-card-input"]')
-    .type('milk{enter}')
+    .type('Milk{enter}')
   
   cy.wait('@createCard')
     .its('response.statusCode')

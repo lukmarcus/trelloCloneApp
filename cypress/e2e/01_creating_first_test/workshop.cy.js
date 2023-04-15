@@ -1,17 +1,30 @@
 /// <reference types="cypress" />
 
+before(() => {
+
+  cy.request({
+      method: 'POST',
+      url: '/api/reset'
+  })
+
+})
+
 it('creates a new list with a card in it', () => {
 
-  cy.visit('/board/1')
+  cy.visit('/')
+
+  cy.get('[data-cy="first-board"]')
+    .click()
+    .type('First Board{enter}')
 
   cy.get('[data-cy="add-list-input"]')
-    .type('new list{enter}')
+    .type('New List{enter}')
 
   cy.get('[data-cy="new-card"]')
     .click()
   
   cy.get('[data-cy="new-card-input"]')
-    .type('new card{enter}')
+    .type('New Card{enter}')
 });
 
 it('bookmarks a board', () => {

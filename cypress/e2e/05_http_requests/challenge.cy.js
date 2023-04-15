@@ -18,7 +18,7 @@ it('date created is formatted as a string', () => {
         method: 'POST',
         url: '/api/boards',
         body:{
-            name: 'new board'
+            name: 'New Board'
         }
     }).then(board => {
         expect('board.body.created').to.be.a('string')
@@ -34,7 +34,7 @@ it('GET /api/boards is returning correct number of boards', () => {
         method: 'POST',
         url: 'api/boards',
         body:{
-            name: 'new board 2'
+            name: 'New Board 2'
         }
     })
 
@@ -57,7 +57,7 @@ it('creating a new list', () => {
         method: 'POST',
         url: '/api/boards',
         body:{
-            name: 'new board 3',
+            name: 'New Board 3',
             starred: true
         }
     }).then(board => {
@@ -65,7 +65,7 @@ it('creating a new list', () => {
             method: 'POST',
             url: '/api/lists',
             body:{
-                name: 'new list',
+                name: 'New List',
                 boardId: board.body.id
             }
         })

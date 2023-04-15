@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import { cardsLoadRandomly } from '../../../workshop-scripts/evilCode'
+
 it('opens a card with due date on 1st March', () => {
 
   cy.visit('/board/1')

@@ -1,5 +1,42 @@
 /// <reference types="cypress" />
 
+before( () => {
+
+  cy.request({
+      method: 'POST',
+      url: '/api/reset'
+  })
+
+  cy.visit('/')
+
+  cy.get('[data-cy="first-board"]')
+    .click()
+    .type('Things to buy{enter}')
+
+  cy.get('[data-cy="add-list-input"]')
+    .click()
+    .type('Groceries{enter}')
+
+  cy.get('[data-cy="new-card"]')
+    .click()
+
+  cy.get('[data-cy="new-card-input"]')
+    .type('Milk{enter}')
+
+  cy.get('[data-cy="new-card-input"]')
+    .type('Bread{enter}')
+
+  cy.get('[data-cy="new-card-input"]')
+    .type('Juice{enter}')
+
+  cy.get('[data-cy="new-card-input"]')
+    .type('Shampoo{enter}')
+
+  cy.get('[data-cy="new-card-input"]')
+    .type('Soap{enter}')
+
+})
+
 beforeEach( () => {
 
   cy.visit('/board/1')

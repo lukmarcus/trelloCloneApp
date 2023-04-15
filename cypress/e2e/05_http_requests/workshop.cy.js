@@ -1,12 +1,21 @@
 /// <reference types="cypress" />
 
+before(() => {
+
+  cy.request({
+    method: 'POST',
+    url: '/api/reset'
+  })
+
+});
+
 it('sends a request over API', () => {
 
   cy.request({
     method: 'POST',
     url: '/api/boards',
     body: {
-      name: 'new board'
+      name: 'New Board'
     }
   })
 
@@ -20,7 +29,7 @@ it('response gets 201 status', () => {
     method: 'POST',
     url: '/api/boards',
     body: {
-      name: 'new board'
+      name: 'New Board'
     }
   }).its('status')
     .should('eq', 201)
@@ -29,7 +38,7 @@ it('response gets 201 status', () => {
     method: 'POST',
     url: '/api/boards',
     body: {
-      name: 'new board'
+      name: 'New Board'
     }
   }).then(board => {
     expect(board.status).to.eq(201)
@@ -54,12 +63,3 @@ it('testing board list', () => {
     expect(board.body[0].user).to.eq(0)
   });
 })
-
-before(() => {
-  
-  cy.request({
-    method: 'POST',
-    url: '/api/reset'
-  })
-
-});

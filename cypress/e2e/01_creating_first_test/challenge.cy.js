@@ -7,6 +7,15 @@
   use F2 key to toggle tools that will help you
 */
 
+before(() => {
+
+  cy.request({
+      method: 'POST',
+      url: '/api/reset'
+  })
+
+})
+
 // challenge #1: create a new list in your board
   it('creating a new list', () => {
 
@@ -14,11 +23,11 @@
     
     cy.get('[data-cy="first-board"]')
       .click()
-      .type('new board{enter}')
+      .type('New Board{enter}')
     
       cy.get('[data-cy="add-list-input"]')
       .click()
-      .type('new list in my new board{enter}')
+      .type('New List in New Board{enter}')
 
   });
 
@@ -29,7 +38,7 @@
       .click()
 
     cy.get('[data-cy="new-card-input"]')
-      .type('new card on my new list{enter}')
+      .type('New Card in New List{enter}')
 
   });
 
@@ -37,7 +46,7 @@
   it('renaming a board', () => {
 
     cy.get('[data-cy="board-title"]')
-      .type('renamed board{enter}')
+      .type('Renamed Board{enter}')
 
   });
 
@@ -50,7 +59,7 @@
 
     cy.get('[data-cy="card-description"]')
       .click()
-      .type('new description')
+      .type('New Description')
 
     cy.get('[data-cy="cancel"]')
       .click()

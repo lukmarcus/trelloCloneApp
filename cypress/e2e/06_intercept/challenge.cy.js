@@ -3,14 +3,14 @@
 beforeEach( function() {
 
   cy.request('POST', '/api/reset')
-  cy.request('POST', '/api/boards', { name: 'new board' })
+  cy.request('POST', '/api/boards', { name: 'New Board' })
     .its('body.id')
     .as('boardId')
     .then( boardId => {
 
       cy.request('POST', '/api/lists', {
         boardId,
-        name: 'new list'
+        name: 'New List'
       })
 
     })
@@ -34,13 +34,13 @@ it('creates a card', function() {
     .click()
 
   cy.get('[data-cy="new-card-input"]')
-    .type('card{enter}')
+    .type('Card{enter}')
   
   cy.wait('@newCard')
     .then(({response, request}) => {
       expect(response.statusCode).eq(201)
       expect(request.body.boardId).to.eq(this.boardId)
-      expect(request.body.name).to.eq('card')
+      expect(request.body.name).to.eq('Card')
     })
 
 });
@@ -60,10 +60,10 @@ it('checking the card', function() {
     .click()
 
   cy.get('[data-cy="new-card-input"]')
-    .type('milk{enter}')
+    .type('Milk{enter}')
 
   cy.get('[data-cy="card-text"]')
-    .should('have.text', 'milk')
+    .should('have.text', 'Milk')
 
   cy.get('[data-cy="card-checkbox"]')
     .check()
@@ -92,7 +92,7 @@ it('creates a new list', function() {
     .click()
 
   cy.get('[data-cy="add-list-input"]')
-    .type('list 2{enter}')
+    .type('List 2{enter}')
   
   cy.wait('@listCreate')
     .its('request.body.boardId')

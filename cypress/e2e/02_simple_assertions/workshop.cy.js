@@ -1,24 +1,43 @@
 /// <reference types="cypress" />
 
-beforeEach( () => {
+before( () => {
 
-  cy.visit('/board/1')
+  cy.request({
+      method: 'POST',
+      url: '/api/reset'
+  })
+
+  cy.visit('/')
+
+  cy.get('[data-cy="first-board"]')
+    .click()
+    .type('Things to buy{enter}')
+
+  cy.get('[data-cy="add-list-input"]')
+    .click()
+    .type('Groceries{enter}')
 
   cy.get('[data-cy="new-card"]')
     .click()
 
   cy.get('[data-cy="new-card-input"]')
-    .type('bread{enter}')
+    .type('Bread{enter}')
+
+})
+
+beforeEach( () => {
+
+  cy.visit('/board/1')
 
 })
 
 it('creates a card', () => {
 
-  cy.get('[data-cy="new-card-input"]')
+  cy.get('[data-cy="new-card"]')
     .click()
 
   cy.get('[data-cy="new-card-input"]')
-    .type('milk{enter}')
+    .type('Milk{enter}')
 
   cy.get('[data-cy="card-text"]')
     .should('be.visible')
@@ -27,17 +46,21 @@ it('creates a card', () => {
 
 it('has proper number of cards', () => {
 
+  cy.get('[data-cy="new-card"]')
+    .click()
+
   cy.get('[data-cy="new-card-input"]')
-    .type('milk{enter}')
+    .type('Cheese{enter}')
 
   cy.get('[data-cy="card"]')
-    .should('have.length', 2)
+    .should('have.length', 3)
 
 })
 
 it('has the checkbox in checked state', () => {
 
   cy.get('[data-cy="card-checkbox"]')
+    .eq(2)
     .click()
   
   cy.get('[data-cy="card-checkbox"]')

@@ -6,6 +6,21 @@
   use F2 key to toggle tools that will help you
 */
 
+before(() => {
+
+  cy.request({
+      method: 'POST',
+      url: '/api/reset'
+  })
+
+  cy.visit('/')
+
+  cy.get('[data-cy="first-board"]')
+    .click()
+    .type('Things to buy{enter}')
+
+})
+
 beforeEach( () => {
 
   cy.visit('/board/1'); // ⚠️ add ID of your board
@@ -16,7 +31,7 @@ beforeEach( () => {
 it('creating a list', () => {
 
   cy.get('[data-cy="add-list-input"]')
-    .type('new created list{enter}')
+    .type('New Created List{enter}')
     .should('be.visible')
 
 })
@@ -25,7 +40,7 @@ it('creating a list', () => {
 it('asserting number of lists', () => {
 
   cy.get('[data-cy="create-list"]')
-    .type('the second list{enter}')
+    .type('The Second List{enter}')
   
   cy.get('[data-cy="list"]')
     .should('have.length', 2)
@@ -55,7 +70,7 @@ it('asserting the checked state', () => {
     .click()
 
   cy.get('[data-cy="new-card-input"]')
-    .type('new item on list{enter}')
+    .type('New Item on List{enter}')
 
   cy.get('[data-cy="card"]')
     .should('be.visible')
@@ -74,10 +89,10 @@ it('asserting list name', () => {
 
   cy.get('[data-cy="board-title"]')
     .click()
-    .type('new board title{enter}')
+    .type('New Board Title{enter}')
 
   cy.get('[data-cy="board-title"]')
-    .should('have.value', 'new board title')
+    .should('have.value', 'New Board Title')
 
 })
 
@@ -89,11 +104,11 @@ it('assert text of created card', () => {
 
   cy.get('[data-cy="new-card-input"]')
     .click()
-    .type('second card{enter}')
+    .type('Second Card{enter}')
 
   cy.get('[data-cy="card-text"]')
     .eq(1)
-    .should('have.text', 'second card')
+    .should('have.text', 'Second Card')
 
 })
 
