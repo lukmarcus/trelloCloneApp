@@ -50,7 +50,7 @@ it('number of lists and list names', () => {
 })
 
 // challenge #4: check visibility of lists using .then() command
-it.only('list visibility', () => {
+it('list visibility', () => {
   
   cy.get('[data-cy="list"]')
     .then((list) => {

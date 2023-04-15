@@ -53,7 +53,7 @@ it('has five cards', () => {
 // challenge #4: the chain in this command is way too long. more importantly, it causes the test 
 // to be unstable. use chrome console to diagnose what each command yields 
 // and delete commands that are not needed for this test
-it.only('has a card with the text "bread" with the date of Feb 14 2022', () => {
+it('has a card with the text "bread" with the date of Feb 14 2022', () => {
 
   // 😈 evil code
   cardsLoadRandomly(3000)

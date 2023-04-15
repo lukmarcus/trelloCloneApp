@@ -58,7 +58,7 @@ it('deleting a list', () => {
 
 });
 
-it.only('mocking', () => {
+it('mocking', () => {
 
   cy.intercept({
     method: 'GET',

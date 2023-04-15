@@ -16,7 +16,7 @@ it('check text of the first card', () => {
 
 });
 
-it.only('check text of all cards in first list', () => {
+it('check text of all cards in first list', () => {
 
   cy.get('[data-cy=card-text]')
     .then((board) => {

@@ -48,7 +48,7 @@ it('has the checkbox in checked state', () => {
 
 })
 
-it.only('has correct list name', () => {
+it('has correct list name', () => {
 
   cy.get('[data-cy="list-name"]')
     .should('have.value', 'Groceries')

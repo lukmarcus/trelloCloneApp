@@ -102,7 +102,7 @@ it('creates a new list', function() {
 
 // challenge #4: delete a list and assert that the server responded 
 // with a correct status code
-it.only('deletes a list', function() {
+it('deletes a list', function() {
 
   cy.visit(`/board/${this.boardId}`)
 

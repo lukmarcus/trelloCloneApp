@@ -14,7 +14,7 @@ it('creates a new list with a card in it', () => {
     .type('new card{enter}')
 });
 
-it.only('bookmarks a board', () => {
+it('bookmarks a board', () => {
 
   cy.visit('/')
 
