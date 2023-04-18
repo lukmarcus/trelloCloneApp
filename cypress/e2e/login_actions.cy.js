@@ -21,7 +21,7 @@ describe('Anonymous user', () => {
 
   })
 
-  it(' Should check with API if board was created WITHOUT login', () => {
+  it(' Should check with API if the board was created WITHOUT login', () => {
 
     cy.request({
       method: 'GET',
@@ -39,7 +39,7 @@ describe('Anonymous user', () => {
 
 describe('User Sign Up', () => {
 
-  it('Should register and stay login', () => {
+  it('Should register and stay log in', () => {
 
     cy.visit('/')
 
@@ -64,7 +64,7 @@ describe('User Sign Up', () => {
 
 describe('Registered user', () => {
 
-  it('Should login and logout', () => {
+  it('Should log in and logout', () => {
 
     cy.visit('/')
 
@@ -113,7 +113,7 @@ describe('Registered user', () => {
 
   })
 
-  it('Should check with API if board was created WITH login', () => {
+  it('Should check with API if the board was created WITH login', () => {
 
     cy.login()
 
@@ -132,7 +132,7 @@ describe('Registered user', () => {
 
   })
 
-  it('Should check if board created WITH login is NOT visible for anonymous user', () => {
+  it('Should check if the board created WITH login is NOT visible for an anonymous user', () => {
 
     cy.visit('/')
 
