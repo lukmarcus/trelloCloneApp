@@ -37,7 +37,7 @@ describe('User Sign Up', () => {
 
     cy.getByData('login-menu')
       .click()
-    cy.get('a[href="/signup]')
+    cy.get('a[href="/signup"]')
       .click()
     cy.getByData('signup-email')
       .click()
