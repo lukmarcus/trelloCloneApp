@@ -1,28 +1,20 @@
 /// <reference types="cypress" />
 
 beforeEach(() => {
-
   cy.request({
     method: 'POST',
     url: '/api/reset'
   })
-
 })
 
 describe('Anonymous user', () => {
-
   it('Should create board WITHOUT login', () => {
-
     cy.visit('/')
-
     cy.firstBoard()
-
   })
 
   it('Should check with API if the board was created WITHOUT login', () => {
-
     cy.visit('/')
-
     cy.firstBoard()
 
     cy.request({
@@ -31,179 +23,126 @@ describe('Anonymous user', () => {
       headers: {
         accept: 'application/json'
       }
-    }).then( (boards) => {
-        expect(boards.body[0].user).to.eq(0)
     })
-
+      .then( (boards) => {
+        expect(boards.body[0].user)
+        .to.eq(0)
+    })
   })
-
 })
 
 describe('User Sign Up', () => {
-
   it('Should register and stay log in', () => {
-
     cy.visit('/')
 
-    cy.get('[data-cy="login-menu"]')
+    cy.getByData('login-menu')
       .click()
-    cy.get('a[href="/signup"]')
+    cy.get('a[href="/signup]')
       .click()
-    cy.get('[data-cy="signup-email"]')
+    cy.getByData('signup-email')
       .click()
       .type('tester@tester.com')
-    cy.get('[data-cy="signup-password"]')
+    cy.getByData('signup-password')
       .click()
       .type('test1234')
-    cy.get('[data-cy="signup-submit"]')
+    cy.getByData('signup-submit')
       .click()
 
     cy.loginCheck()
   })
-
 })
 
 describe('Registered user', () => {
-
   it('Should log in and logout', () => {
-
     cy.register()
-
     cy.visit('/')
 
-    cy.get('[data-cy="login-menu"]')
+    cy.getByData('login-menu')
       .click()
-    cy.get('[data-cy="login-email"]')
+    cy.getByData('login-email')
       .click()
       .type('tester@tester.com')
-    cy.get('[data-cy="login-password"]')
+    cy.getByData('login-password')
       .click()
       .type('test1234')
-    cy.get('[data-cy="login-submit"]')
+    cy.getByData('login-submit')
       .click()
 
     cy.loginCheck()
 
-    cy.get('[data-cy="logged-user"]')
+    cy.getByData('logged-user')
       .click()
-
     cy.visit('/')
-
-    cy.get('[data-cy="logged-user"]')
+    cy.getByData('logged-user')
       .should('not.contain', 'tester@tester.com')
-
   })
 
   it('Should create board WITH login', () => {
-
     cy.register()
-
     cy.login()
-
     cy.visit('/')
-
     cy.loginCheck()
-
     cy.firstBoard()
 
-    cy.get('[data-cy="board-title"]')
+    cy.getByData('board-title')
       .should('be.visible')
-
   })
 
   it('Should check with API if the board was created WITH login', () => {
-
     cy.register()
-
     cy.login()
-
     cy.visit('/')
-
     cy.loginCheck()
-
     cy.firstBoard()
 
-    cy.getCookie('auth_token').then((auth_token) => {
-      cy.request({
-        method: 'GET',
-        url: '/api/boards/',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${auth_token.value}`
-        }
-      }).then( (boards) => {
-          expect(boards.body[0].user).to.eq(1)
+    cy.getBoards()
+      .then((boards) => {
+        expect(boards.body[0].user)
+        .to.eq(1)
       })
-    })
-
   })
 
   it('Should check if the board created WITH login is NOT visible for an anonymous user', () => {
-
     cy.register()
-
     cy.login()
-
     cy.visit('/')
-
     cy.loginCheck()
-
     cy.firstBoard()
 
-    cy.get('[data-cy="logged-user"]')
+    cy.getByData('logged-user')
       .click()
 
     cy.visit('/')
-
-    cy.get('[data-cy="logged-user"]')
+    cy.getByData('logged-user')
       .should('not.contain', 'tester@tester.com')
-
-    cy.get('[data-cy="board-item"]')
+    cy.getByData('board-item')
       .should('not.exist')
-
   })
 
   it('Should delete board created WITH login', () => {
-
     cy.register()
-
     cy.login()
-
     cy.visit('/')
-
     cy.loginCheck()
-
     cy.firstBoard()
 
-    cy.get('[data-cy="board-title"]')
+    cy.getByData('board-title')
       .should('exist')
-
-    cy.get('[data-cy="board-options"]')
+    cy.getByData('board-options')
+      .click()
+    cy.getByData('delete-board')
       .click()
 
-    cy.get('[data-cy="delete-board"]')
-      .click()
-
-    cy.getCookie('auth_token').then((auth_token) => {
-      cy.request({
-        method: 'GET',
-        url: '/api/boards/',
-        headers: {
-          accept: 'application/json',
-          Authorization: `Bearer ${auth_token.value}`
-        }
-      }).then((response) => {
-          expect(response.body).to.be.empty
-         })
-    })
+    cy.getBoards()
+      .then((response) => {
+        expect(response.body)
+        .to.be.empty
+      })
 
     cy.visit('/')
-
-    cy.get('[data-cy="logged-user"]')
+    cy.getByData('logged-user')
       .should('not.contain', 'tester@tester.com')
-
-    cy.get('[data-cy="board-item"]')
+    cy.getByData('board-item')
       .should('not.exist')
-
   })
 })

@@ -12,13 +12,13 @@ Cypress.Commands.add('login', () => {
       "password": "test1234"
     }
   })
-  .then((resp) => {
-    cy.setCookie('auth_token', resp.body.accessToken)
+    .then((resp) => {
+      cy.setCookie('auth_token', resp.body.accessToken)
   })
 })
 
 Cypress.Commands.add('loginCheck', () => {
-  cy.get('[data-cy="logged-user"]')
+  cy.getByData('logged-user')
     .should('contain', 'tester@tester.com')
 })
 
@@ -37,17 +37,42 @@ Cypress.Commands.add('register', () => {
 })
 
 Cypress.Commands.add('firstBoard', () => {
-  cy.get('[data-cy="first-board"]')
+  cy.getByData('first-board')
   .click()
   .type('Board{enter}')
 })
 
 Cypress.Commands.add('logout', () => {
-  cy.get('[data-cy="logged-user"]')
+  cy.getByData('logged-user')
     .click()
   cy.visit('/')
-  cy.get('[data-cy="logged-user"]')
+  cy.getByData('logged-user')
     .should('not.contain', 'tester@tester.com')
+})
+
+Cypress.Commands.add('getByData', (dataId) => {
+  cy.get(`[data-cy="${dataId}"]`)
+})
+
+Cypress.Commands.add('authRequest', (payload) => {
+  cy.getCookie('auth_token')
+    .then((auth_token) => {
+      cy.request({
+        ...payload,
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${auth_token.value}`,
+          ...payload.headers,
+        }
+      })
+    })
+})
+
+Cypress.Commands.add('getBoards', () => {
+  cy.authRequest({
+    method: 'GET',
+    url: '/api/boards/',
+  })
 })
 
 export {}
