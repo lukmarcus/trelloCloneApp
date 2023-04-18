@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-before(() => {
+beforeEach(() => {
 
   cy.request({
     method: 'POST',
@@ -15,13 +15,15 @@ describe('Anonymous user', () => {
 
     cy.visit('/')
 
-    cy.get('[data-cy="first-board"]')
-      .click()
-      .type('Board{enter}')
+    cy.firstBoard()
 
   })
 
-  it(' Should check with API if the board was created WITHOUT login', () => {
+  it('Should check with API if the board was created WITHOUT login', () => {
+
+    cy.visit('/')
+
+    cy.firstBoard()
 
     cy.request({
       method: 'GET',
@@ -56,8 +58,7 @@ describe('User Sign Up', () => {
     cy.get('[data-cy="signup-submit"]')
       .click()
 
-    cy.get('[data-cy="logged-user"]')
-      .should('contain', 'tester@tester.com')
+    cy.loginCheck()
   })
 
 })
@@ -65,6 +66,8 @@ describe('User Sign Up', () => {
 describe('Registered user', () => {
 
   it('Should log in and logout', () => {
+
+    cy.register()
 
     cy.visit('/')
 
@@ -79,8 +82,9 @@ describe('Registered user', () => {
     cy.get('[data-cy="login-submit"]')
       .click()
 
+    cy.loginCheck()
+
     cy.get('[data-cy="logged-user"]')
-      .should('contain', 'tester@tester.com')
       .click()
 
     cy.visit('/')
@@ -92,21 +96,15 @@ describe('Registered user', () => {
 
   it('Should create board WITH login', () => {
 
-    cy.request({
-      method: 'DELETE',
-      url: '/api/boards'
-    })
+    cy.register()
 
     cy.login()
 
     cy.visit('/')
 
-    cy.get('[data-cy="logged-user"]')
-      .should('contain', 'tester@tester.com')
+    cy.loginCheck()
 
-    cy.get('[data-cy="first-board"]')
-      .click()
-      .type('Board{enter}')
+    cy.firstBoard()
 
     cy.get('[data-cy="board-title"]')
       .should('be.visible')
@@ -115,7 +113,15 @@ describe('Registered user', () => {
 
   it('Should check with API if the board was created WITH login', () => {
 
+    cy.register()
+
     cy.login()
+
+    cy.visit('/')
+
+    cy.loginCheck()
+
+    cy.firstBoard()
 
     cy.getCookie('auth_token').then((auth_token) => {
       cy.request({
@@ -134,6 +140,19 @@ describe('Registered user', () => {
 
   it('Should check if the board created WITH login is NOT visible for an anonymous user', () => {
 
+    cy.register()
+
+    cy.login()
+
+    cy.visit('/')
+
+    cy.loginCheck()
+
+    cy.firstBoard()
+
+    cy.get('[data-cy="logged-user"]')
+      .click()
+
     cy.visit('/')
 
     cy.get('[data-cy="logged-user"]')
@@ -146,15 +165,18 @@ describe('Registered user', () => {
 
   it('Should delete board created WITH login', () => {
 
+    cy.register()
+
     cy.login()
 
     cy.visit('/')
 
-    cy.get('[data-cy="logged-user"]')
-      .should('contain', 'tester@tester.com')
+    cy.loginCheck()
 
-    cy.get('[data-cy="board-item"]')
-      .click()
+    cy.firstBoard()
+
+    cy.get('[data-cy="board-title"]')
+      .should('exist')
 
     cy.get('[data-cy="board-options"]')
       .click()
