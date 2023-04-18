@@ -29,8 +29,8 @@ describe('Anonymous user', () => {
       headers: {
         accept: 'application/json'
       }
-    }).then( (board) => {
-        expect(board.body[0].user).to.eq(0)
+    }).then( (boards) => {
+        expect(boards.body[0].user).to.eq(0)
     })
 
   })
@@ -40,11 +40,6 @@ describe('Anonymous user', () => {
 describe('User Sign Up', () => {
 
   it('Should register and stay login', () => {
-
-    cy.request({
-      method: 'DELETE',
-      url: '/api/boards'
-    })
 
     cy.visit('/')
 
@@ -88,38 +83,105 @@ describe('Registered user', () => {
       .should('contain', 'tester@tester.com')
       .click()
 
-    cy.reload()
+    cy.visit('/')
 
     cy.get('[data-cy="logged-user"]')
       .should('not.contain', 'tester@tester.com')
+
   })
 
-  it('Should login with API login with web check | Create board, list, card & check user ID with GET', () => {
+  it('Should create board WITH login', () => {
+
+    cy.request({
+      method: 'DELETE',
+      url: '/api/boards'
+    })
 
     cy.login()
 
     cy.visit('/')
 
-    cy.get('.inline-block')
+    cy.get('[data-cy="logged-user"]')
       .should('contain', 'tester@tester.com')
 
     cy.get('[data-cy="first-board"]')
       .click()
       .type('Board{enter}')
 
+    cy.get('[data-cy="board-title"]')
+      .should('be.visible')
+
+  })
+
+  it('Should check with API if board was created WITH login', () => {
+
+    cy.login()
+
     cy.getCookie('auth_token').then((auth_token) => {
       cy.request({
         method: 'GET',
-        url: '/api/boards/1',
+        url: '/api/boards/',
         headers: {
           accept: 'application/json',
           Authorization: `Bearer ${auth_token.value}`
-    
         }
-      }).then( (board) => {
-          expect(board.body.user).to.eq(1)
+      }).then( (boards) => {
+          expect(boards.body[0].user).to.eq(1)
       })
     })
+
+  })
+
+  it('Should check if board created WITH login is NOT visible for anonymous user', () => {
+
+    cy.visit('/')
+
+    cy.get('[data-cy="logged-user"]')
+      .should('not.contain', 'tester@tester.com')
+
+    cy.get('[data-cy="board-item"]')
+      .should('not.exist')
+
+  })
+
+  it('Should delete board created WITH login', () => {
+
+    cy.login()
+
+    cy.visit('/')
+
+    cy.get('[data-cy="logged-user"]')
+      .should('contain', 'tester@tester.com')
+
+    cy.get('[data-cy="board-item"]')
+      .click()
+
+    cy.get('[data-cy="board-options"]')
+      .click()
+
+    cy.get('[data-cy="delete-board"]')
+      .click()
+
+    cy.getCookie('auth_token').then((auth_token) => {
+      cy.request({
+        method: 'GET',
+        url: '/api/boards/',
+        headers: {
+          accept: 'application/json',
+          Authorization: `Bearer ${auth_token.value}`
+        }
+      }).then((response) => {
+          expect(response.body).to.be.empty
+         })
+    })
+
+    cy.visit('/')
+
+    cy.get('[data-cy="logged-user"]')
+      .should('not.contain', 'tester@tester.com')
+
+    cy.get('[data-cy="board-item"]')
+      .should('not.exist')
 
   })
 })
