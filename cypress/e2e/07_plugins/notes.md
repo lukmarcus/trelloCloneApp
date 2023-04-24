@@ -1,4 +1,5 @@
 # Plugins
+
 - there’s a variety of plugins available on [Cypress docs](https://docs.cypress.io/plugins/directory), but you can also search in [npm directory](https://npmjs.com)
 
 Most of the plugins follow a common pattern:
@@ -8,6 +9,7 @@ Most of the plugins follow a common pattern:
 3. sometimes the plugin requires an import to `cypress/plugins/index.js` as well
 
 Some awesome plugins out there enable you to:
+
 - add new commands to the Cypress library
 - do visual testing
 - test emails
@@ -17,6 +19,7 @@ Some awesome plugins out there enable you to:
 - and much more
 
 Some of my favourite plugins:
+
 - [my plugin for testin API](https://github.com/filiphric/cypress-plugin-api)
 - [Cypress ESLint Plugin](https://github.com/cypress-io/eslint-plugin-cypress)
 - [cypress-grep plugin for grepping, tagging and filtering tests](https://github.com/cypress-io/cypress-grep)
